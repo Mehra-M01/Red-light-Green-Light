@@ -5,16 +5,17 @@ import time
 from playsound import playsound
 
 capture = cv2.VideoCapture(0) # capturing video
-cpos = 0 # Position of user
+pos = 0 # Position of user
 t0= 0 # start time of run
 t1=0 # end time of run
-usersum = 0 # capturing all user position and storing its sum of 33 points
+usersum = 0 # capturing all user position and storing its sum of 33 landmarks for keypoint detection
 duration = 0 # duration for which user is allowed to move
 isAlive = 1 # pointer for user alive or not
 isInit = False # initialization of start and end time
-cstart, cEnd= 0,0 # time for which user is not allowed to move
+cstart=0 # time for which user is not allowed to move
+cEnd= 0 
 isCinit = False #initialization of cstart and cend
-tempsum = 0 # comparing to usersum to check for movement
+checksum = 0 # comparing to usersum to check for movement
 winner = 0 # if cpos=100 then user won (crossed the line)
 inFrame = 0 # user in frame or not
 inFramecheck = False
@@ -81,9 +82,9 @@ while True:
             try:
                 m = calc_dist(res.pose_landmarks.landmark) # calculating distance between 24th and 28th landmark
                 if m < threshold:
-                    cpos += 1
+                    pos += 1
 
-                print("current progress is : ", cpos)
+                print("current progress is : ", pos)
             except:
                 print("Not visible")
 
@@ -91,7 +92,7 @@ while True:
 
         else:
 
-            if cpos >= 100:
+            if pos >= 100:
                 print("WINNER")
                 winner = 1
 
@@ -105,10 +106,10 @@ while True:
                     playsound('redLight.mp3')
                     usersum = calc_sum(res.pose_landmarks.landmark)
                 if (cEnd - cstart) <=3:
-                    tempsum = calc_sum(res.pose_landmarks.landmark)
+                    checksum = calc_sum(res.pose_landmarks.landmark)
                     cEnd = time.time()
-                    if abs(tempsum - usersum) >150:
-                        print("DEAD" , abs(tempsum - usersum))
+                    if abs(checksum - usersum) >150:
+                        print("DEAD" , abs(checksum - usersum))
                         isAlive = 0 # if true,user is dead
 
                 else:
@@ -116,7 +117,7 @@ while True:
                     isCinit = False
         
         #cv2.circle(image, center_coordinates, radius, color, thickness)                        
-        cv2.circle(currWindow, ((55+6*cpos),280),15, (0,0,255), -1)
+        cv2.circle(currWindow, ((55+6*pos),280),15, (0,0,255), -1)
         
         #cv2.resize(source,fx, fy)
         mainWin = np.concatenate(cv2.resize((frm, (800,400)), currWindow), axis = 0)
