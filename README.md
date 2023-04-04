@@ -1,4 +1,4 @@
-# Red-light-Green-Light
+# Red-light Green-light
 Red light Green light (Squid Game) using python  | machine learning project
 
 This project runs in this following fashion, firstly it checks if player is in the frame or not, once player is in frame  audio for greenLight is played which allows player to move until some random time gap after which redLight is played. Now checks if player has made any movement or not, if yes then player declared Dead else game progresses until player gets more than 100 points or he is dead midway.
